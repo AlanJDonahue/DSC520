@@ -1,0 +1,112 @@
+---
+title: "assignment_05_DonahueAlan"
+author: "Alan Donahue"
+date: "24 July 2021"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+# Assignment 05
+```{r}
+# the working directory to the root of your DSC 520 directory
+setwd("C:/Users/Alan Donahue/Documents/data science masters/DSC 520 Stats/GIT/dsc520")
+
+#Load the `data/r4ds/heights.csv` to
+heights_df <- read.csv("data/r4ds/heights.csv")
+
+#Using `cor()` compute correlation coefficients for
+#height vs. earn
+cor(heights_df$height, heights_df$earn, use = "everything", method = "pearson")
+#age vs. earn
+cor(heights_df$age, heights_df$earn, use = "everything", method = "pearson")
+#ed vs. earn
+cor(heights_df$ed, heights_df$earn, use = "everything", method = "pearson")
+
+#Spurious correlation
+#The following is data on US spending on science, space, and technology in millions of today's dollars
+#and Suicides by hanging strangulation and suffocation for the years 1999 to 2009
+#Compute the correlation between these variables
+tech_spending <- c(18079, 18594, 19753, 20734, 20831, 23029, 23597, 23584, 25525, 27731, 29449)
+suicides <- c(5427, 5688, 6198, 6462, 6635, 7336, 7248, 7491, 8161, 8578, 9000)
+cor(tech_spending, suicides, use = "everything", method = "pearson")
+```
+
+# Student Survey
+
+## Question 1
+
+```{r}
+# the working directory to the root of your DSC 520 directory
+setwd("C:/Users/Alan Donahue/Documents/data science masters/DSC 520 Stats/GIT/dsc520")
+
+#loading the student-survey data set
+studsurvey_df <- read.csv("data/student-survey.csv")
+
+#Covariance of variables
+cov(studsurvey_df$TimeReading, studsurvey_df$TimeTV, use = "everything", method = "pearson")
+cov(studsurvey_df$TimeReading, studsurvey_df$Happiness, use = "everything", method = "pearson")
+cov(studsurvey_df$TimeReading, studsurvey_df$Gender, use = "everything", method = "pearson")
+cov(studsurvey_df$TimeTV, studsurvey_df$Happiness, use = "everything", method = "pearson")
+cov(studsurvey_df$TimeTV, studsurvey_df$Gender, use = "everything", method = "pearson")
+cov(studsurvey_df$Happiness, studsurvey_df$Gender, use = "everything", method = "pearson")
+```
+I would use the covariance calculation because it will inform me the direction of the relationship that the two
+variables have. For instance, the covariance between TimeReading and TimeTV is negative, which means that the two
+variables have an inverse relationship. On the other hand, TimeTV and Happiness have a positive covariance, which
+means that the two variables move in tandem.
+
+
+## Question 2
+Looking at the data, it seems that TimeReading is based on hours, while TimeTV is based on minutes. Additionally,
+Happiness looks to be on a sliding scale from what I assume is 1 to 100. Finally, Gender is represented by 1 and 0 
+for the two different genders.
+
+Changing the measurement being used for the data would alter the number for covariance. However, it still wouldn't 
+alter whether a covariance is positive or negative. The purpose of covariance is to determine the relationship the
+relationship between two different variables. So in this case, the positive and negative aspect is what is important.
+Overall, having the number change would not truly affect the answer of covariance between two variables.
+
+## Question 3
+I plan to use Pearson's r because the information is not ordinal which is needed for Spearnman's r or Kendall's tau.
+I would predict that there is a negative relationship between TimeReading and TimeTV because I am assuming that most
+people would focus on one or the other instead of both.
+
+## Question 4
+```{r}
+# the working directory to the root of your DSC 520 directory
+setwd("C:/Users/Alan Donahue/Documents/data science masters/DSC 520 Stats/GIT/dsc520")
+
+#loading the student-survey data set
+studsurvey_df <- read.csv("data/student-survey.csv")
+
+#finding correlation of all variables
+cor(studsurvey_df, use = "everything", method = "pearson")
+
+#single correlation between two variables
+cor.test(studsurvey_df$TimeReading, studsurvey_df$TimeTV, use = "everything", method = "pearson", conf.level = 0.95)
+
+#99% confidence interval
+cor.test(studsurvey_df$TimeReading, studsurvey_df$TimeTV, use = "everything", method = "pearson", conf.level = 0.99)
+```
+The correlation matrix shows that there is an inverse relationship between TimeReading and TimeTV. Additionally, there is an inverse relationship between TimeReading and Happiness. However, there is a positive relationship between TimeTV and Happiness. 
+
+## Question 5
+```{r}
+cor(studsurvey_df)^2
+```
+Based off the coefficient of determination, TimeReading and TimeTV share 77.98% of the variance. However, we cannot 
+determine if TimeReading is the cause for TimeTV and vice versa.
+
+## Question 6
+No I cannot say that watching more TV caused students to read less. There is potential for a third variable that is
+unaccounted for. Additionally, correlation coefficients say nothing about which variable causes the other to change.
+
+## Question 7
+```{r}
+library(ggm)
+pcor(c("TimeReading", "TimeTV", "Happiness"), var(studsurvey_df))
+```
+I performed a partial correlation on TimeReading and TimeTV, while Happiness was the variable I was "controlling." 
+There was a sleight decrease in the correlation coefficient, but it doesn't change my interpretation of the results
+because it was such a small change.
