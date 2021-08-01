@@ -1,0 +1,306 @@
+---
+title: "Week 8 Assignments"
+author: "Alan Donahue"
+date: "7/31/2021"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+# Assignment 6
+
+```{r}
+## Set the working directory to the root of your DSC 520 directory
+setwd("C:/Users/Alan Donahue/Documents/data science masters/DSC 520 Stats/GIT/dsc520")
+
+## Load the `data/r4ds/heights.csv` to
+heights_df <- read.csv("data/r4ds/heights.csv")
+
+## Load the ggplot2 library
+library(ggplot2)
+
+## Fit a linear model using the `age` variable as the predictor and `earn` as the outcome
+age_lm <- lm(earn ~ age, data = heights_df)
+
+## View the summary of your model using `summary()`
+summary(age_lm)
+
+## Creating predictions using `predict()`
+age_predict_df <- data.frame(earn = predict(age_lm, heights_df), age=heights_df$age)
+
+## Plot the predictions against the original data
+ggplot(data = heights_df, aes(y = earn, x = age)) +
+  geom_point(color='blue') +
+  geom_line(color='red',data = age_predict_df, aes(y=earn, x=age))
+
+mean_earn <- mean(heights_df$earn)
+## Corrected Sum of Squares Total
+sst <- sum((mean_earn - heights_df$earn)^2)
+## Corrected Sum of Squares for Model
+ssm <- sum((mean_earn - age_predict_df$earn)^2)
+## Residuals
+residuals <- heights_df$earn - age_predict_df$earn
+## Sum of Squares for Error
+sse <- sum(residuals^2)
+## R Squared R^2 = SSM\SST
+r_squared <- ssm / sst
+
+## Number of observations
+n <- 1191
+## Number of regression parameters
+p <- 2
+## Corrected Degrees of Freedom for Model (p-1)
+dfm <- p - 1
+## Degrees of Freedom for Error (n-p)
+dfe <- n - p
+## Corrected Degrees of Freedom Total:   DFT = n - 1
+dft <- n - 1
+
+## Mean of Squares for Model:   MSM = SSM / DFM
+msm <- ssm / dfm
+## Mean of Squares for Error:   MSE = SSE / DFE
+mse <- sse / dfe
+## Mean of Squares Total:   MST = SST / DFT
+mst <- sst / dft
+## F Statistic F = MSM/MSE
+f_score <- msm / mse
+
+## Adjusted R Squared R2 = 1 - (1 - R2)(n - 1) / (n - p)
+adjusted_r_squared <- 1 - (1 - r_squared)*(n - 1) / (n - p)
+
+## Calculate the p-value from the F distribution
+p_value <- pf(f_score, dfm, dft, lower.tail=F)
+
+```
+
+# Assignment 7
+
+```{r}
+
+## Set the working directory to the root of your DSC 520 directory
+setwd("C:/Users/Alan Donahue/Documents/data science masters/DSC 520 Stats/GIT/dsc520")
+
+## Load the `data/r4ds/heights.csv` to
+heights_df <- read.csv("data/r4ds/heights.csv")
+
+# Fit a linear model
+earn_lm <-  lm(earn ~ age + height + sex + ed + race, data=heights_df)
+
+# View the summary of your model
+summary(earn_lm)
+
+predicted_df <- data.frame(
+  earn = predict(earn_lm, heights_df),
+  ed=heights_df$ed, race=heights_df$race, height=heights_df$height,
+  age=heights_df$age, sex=heights_df$sex
+  )
+
+## Compute deviation (i.e. residuals)
+mean_earn <- mean(heights_df$earn)
+## Corrected Sum of Squares Total
+sst <- sum((mean_earn - heights_df$earn)^2)
+## Corrected Sum of Squares for Model
+ssm <- sum((mean_earn - predicted_df$earn)^2)
+## Residuals
+residuals <- heights_df$earn - predicted_df$earn
+## Sum of Squares for Error
+sse <- sum(residuals^2)
+## R Squared
+r_squared <- ssm / sst
+
+## Number of observations
+n <- 1191
+## Number of regression paramaters
+p <- 8
+## Corrected Degrees of Freedom for Model
+dfm <- p - 1
+## Degrees of Freedom for Error
+dfe <- n - p
+## Corrected Degrees of Freedom Total:   DFT = n - 1
+dft <- n - 1
+
+## Mean of Squares for Model:   MSM = SSM / DFM
+msm <- ssm / dfm
+## Mean of Squares for Error:   MSE = SSE / DFE
+mse <- sse / dfe
+## Mean of Squares Total:   MST = SST / DFT
+mst <- sst / dft
+## F Statistic
+f_score <- msm / mse
+
+## Adjusted R Squared R2 = 1 - (1 - R2)(n - 1) / (n - p)
+adjusted_r_squared <- 1 - (1-r_squared)*(n - 1) / (n - p)
+```
+
+# Housing Data
+
+## Question 1
+
+```{r}
+library(car)
+
+#setting the working directory
+setwd("C:/Users/Alan Donahue/Documents/data science masters/DSC 520 Stats/GIT/dsc520")
+
+#load the data
+housing_df <- read.csv("data/week-6-housing.csv")
+
+summary(housing_df)
+
+#change names for consistency
+colnames(housing_df)[1] <- "Sale_Date"
+colnames(housing_df)[2] <- "Sale_Price"
+
+head(housing_df$sale_warning)
+
+#change "" to 0 in sale_warning
+housing_df$sale_warning <- sub("^$", 0, housing_df$sale_warning)
+head(housing_df$sale_warning)
+
+#change "" to NA in ctyname
+unique(is.na(housing_df$ctyname))
+housing_df$ctyname <- sub("^$", NA, housing_df$ctyname)
+unique(is.na(housing_df$ctyname))
+```
+
+I completed a few changes to the data set. First, I converted it to a .csv file. I also changed the names of the first two columns for consistency sake. From there, I changed any "" in sale_warning to a 0 to represent FALSE. Finally, I couldn't find a quick way to change all the "" in ctyname and confirm that they were accurate so I changed the "" to NA.
+
+## Question 2
+
+```{r}
+#check to make sure no ""
+unique(housing_df$building_grade)
+unique(housing_df$year_built)
+var3 <- housing_df[housing_df$sq_ft_lot=="", ]
+print(var3)
+
+#Question 2 
+sq_ft_lot_lm <- lm(Sale_Price ~ sq_ft_lot, data=housing_df, na.action = na.omit)
+mult_pred_lm <- lm(Sale_Price ~ sq_ft_lot + building_grade + year_built, data = housing_df, na.action = na.omit)
+```
+
+I chose my additional predictors based off the theoretical importance they have in regard to buying or selling a house.I felt that the quality of the build (building_grade) was important to the sale price because a cheaply made house should go for less money. I felt when the house was built was important to the sale price because an older house made need more repairs than a new house.
+
+## Question 3
+
+```{r}
+summary(sq_ft_lot_lm)
+summary(mult_pred_lm)
+```
+
+The R^2^ and Adjusted R^2^ for the simple regression are .01435 and .01428 respectfully. The R^2^ value tells us that the sq_ft_lot accounts for 1.44% of the variation in sale price. The Adjusted R^2^ tells us how well our model generalizes. We want the value to be close to the value of R^2^. It tells us that there is a .007% in shrinkage which means it would generalize well.
+
+The R^2^ and Adjusted R^2^ for the multiple regression are .1729 and .1727 respectfully. The R^2^ value tells us that the multple predictors account for 17.29% of variance in sale price which means it covers more compared to just sq_ft_lot. The Adjusted R^2^ tells us there is a .02% in shrinkage which means it would generalize well.
+
+## Question 4
+
+For the simple regression, the b~0~ = 6.418e+05 and b~1~ = 8.510e-01. This tells me that when X = 0, the sale price is going to be $641,800 and for every sq_ft_lot added, the price will go up by .851.
+
+For the multiple regression, b~0~ = -6.724e+06, b~1~ = 6.577e-01, b~2~ = 1.218e+05, and b~3~ = 3.194e+03. The negative intercept is a cause for concern. It means that there there might be an issue with the assumption of linearity. The other coefficients show how much the sale price would go up if one sq_ft_lot or the build grade went up or there was a change in year the house was built. 
+
+## Question 5
+
+```{r}
+confint(sq_ft_lot_lm)
+confint(mult_pred_lm)
+```
+
+The confidence intervals are stating that in 95% of these samples it will contain the b that represents the population. The confidence intervals look good because they don't cross zero and the two ends are close to each other for each interval.
+
+## Question 6
+
+```{r}
+anova(sq_ft_lot_lm, mult_pred_lm)
+```
+
+We can say it has significantly improved.
+
+## Question 7
+
+```{r}
+housing_df$residuals <- resid(mult_pred_lm)
+housing_df$standardized.residuals <- rstandard(mult_pred_lm)
+housing_df$studentized.residuals <- rstudent(mult_pred_lm)
+housing_df$cooks.distance <- cooks.distance(mult_pred_lm)
+housing_df$dfbeta <- dfbeta(mult_pred_lm)
+housing_df$dffit <- dffits(mult_pred_lm)
+housing_df$leverage <- hatvalues(mult_pred_lm)
+housing_df$covariance.ratios <- covratio(mult_pred_lm)
+```
+
+## Question 8
+
+```{r}
+head(housing_df$standardized.residuals > 2 | housing_df$standardized.residuals < -2)
+housing_df$large.residuals <- housing_df$standardized.residuals > 2 | housing_df$standardized.residuals < -2
+head(housing_df$large.residuals)
+```
+
+## Question 9
+
+```{r}
+sum(housing_df$large.residuals)
+percent.large <- (sum(housing_df$large.residuals)/nrow(housing_df)) * 100
+print(head(percent.large))
+```
+
+## Question 10
+
+```{r}
+first.results <- housing_df[housing_df$large.residuals, c("Sale_Price", "sq_ft_lot", "building_grade", "year_built", "standardized.residuals")]
+head(first.results)
+```
+
+## Question 11
+
+```{r}
+second.results <- housing_df[housing_df$large.residuals, c("cooks.distance", "leverage", "covariance.ratios")]
+head(second.results)
+
+#cooks distance greater than 1 = concern
+housing_df[housing_df$cooks.distance > 1, ]
+
+twice.leverage = 2 * ((3+1) / 12864)
+three.leverage = 3 * ((3+1) / 12864)
+
+third.results <- housing_df[housing_df$leverage > three.leverage, ]
+head(third.results)
+
+CVR.upper <- 1 + (3 * (3+1)/12864)
+CVR.lower <- 1 - (3 * (3+1)/12864)
+
+sum(housing_df$covariance.ratios > CVR.upper | housing_df$covariance.ratios < CVR.lower)
+```
+
+There are no issues with Cook's Distance. However, there are well over 430 cases that the average leverage is above three times the average leverage. Additionally, there are 755 cases where the covariance ratios are outside of the upper and lower limits. This is cause for major concern.
+
+## Question 12
+
+```{r}
+durbinWatsonTest(mult_pred_lm)
+```
+
+The assumption of independence has not been met after running the durbinWatsonTest() function. Anything less than 1 or greater than three is a cause for concern. The ideal scenario is to be as close to 2 as possible. The function returns 0.6035601 which is below 1.
+
+## Question 13
+
+```{r}
+vif(mult_pred_lm)
+1/vif(mult_pred_lm)
+mean(vif(mult_pred_lm))
+```
+
+The assumption of no multicollinearity has been met because the largest VIF is less than 10, the average VIF is not substantially greater than 1, and the tolerance is above .2.
+
+## Question 14
+
+```{r}
+plot(mult_pred_lm)
+hist(housing_df$studentized.residuals)
+```
+
+The Residuals vs Fitted chart shows that the dots are all clustered and then fan out which means that there is heteroscedasticity in the data.The Q-Q plot shows deviations in the line at the extremes which means the data is not normalized and has a skew. 
+
+## Question 15
+
+The issues with leverage, covariance ratios, and the assumption of independence not being met means that the regression model is biased and not good for generalizing the population. 
