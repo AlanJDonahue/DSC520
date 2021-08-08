@@ -1,0 +1,95 @@
+---
+title: "Exercise 9.2 Alan Donahue"
+author: "Alan Donahue"
+date: "8/8/2021"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+# Part 1
+
+## Question 1
+
+```{r}
+#setting the working directory
+setwd("C:/Users/Alan Donahue/Documents/data science masters/DSC 520 Stats/GIT/dsc520")
+
+#load the library
+library(foreign)
+library(caTools)
+
+#load the data
+surgery_df <- read.arff("data/ThoraricSurgery.arff")
+
+head(surgery_df)
+
+#Question 1
+#build the binary logistic regression model
+surgery_logmod.1 <- glm(Risk1Yr ~ DGN + PRE4 + PRE5 + PRE6 + PRE7 + PRE8 + PRE9 + PRE10 + PRE11 + PRE14 + PRE17
+                       + PRE19 + PRE25 + PRE30 + PRE32 + AGE, data = surgery_df, family = binomial())
+
+#summary of model
+summary(surgery_logmod.1)
+```
+
+## Question 2
+
+Based off the results, it looks like PRE9T, PRE14OC14, PRE17T, and PRE30T had the greatest effect on the survival rate.
+
+## Question 3
+
+```{r}
+split <- sample.split(surgery_df, SplitRatio = 0.8)
+split
+train <- subset(surgery_df, split == "TRUE")
+test <- subset(surgery_df, split == "FALSE")
+
+surgery_logmod.2 <- glm(Risk1Yr ~ PRE9 + PRE14 + PRE17 + PRE30, data = train, family = "binomial")
+
+res <- predict(surgery_logmod.2, test, type = "response")
+head(res)
+
+res <- predict(surgery_logmod.2, train, type = "response")
+head(res)
+
+confmatrix <- table(Actual_Value=train$Risk1Yr, Predicted_Value = res > 0.5)
+confmatrix
+
+accuracy <- ((confmatrix[[1,1]] + confmatrix[[2,2]]) / sum(confmatrix)) * 100
+print(accuracy)
+```
+
+
+# Part 2
+
+
+```{r}
+#setting the working directory
+setwd("C:/Users/Alan Donahue/Documents/data science masters/DSC 520 Stats/GIT/dsc520")
+
+binary_df = read.csv("data/binary-classifier-data.csv")
+
+#logistic regression model
+binary_logmod.1 <- glm(label ~ x + y, data = binary_df, family = "binomial")
+
+split <- sample.split(binary_df, SplitRatio = .8)
+split
+train <- subset(binary_df, split == "TRUE")
+test <- subset(binary_df, split ==  "FALSE")
+
+summary(binary_logmod.1)
+
+res <- predict(binary_logmod.1, test, type = "response")
+head(res)
+
+res <- predict(binary_logmod.1, train, type = "response")
+head(res)
+
+confmatrix.2 <- table(Actual_Value=train$label, Predicted_Value = res > .5)
+confmatrix.2
+
+accuracy.2 <- ((confmatrix.2[[1,1]] + confmatrix.2[[2,2]]) / sum(confmatrix.2)) * 100
+print(accuracy.2)
+
+```
