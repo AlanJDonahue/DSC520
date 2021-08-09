@@ -1,0 +1,127 @@
+---
+title: "Final Project Step Two"
+author: "Alan Donahue"
+date: "8/8/2021"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+# How to import and clean my data
+
+```{r}
+#setting the working directory
+setwd("C:/Users/Alan Donahue/Documents/data science masters/DSC 520 Stats/GIT/dsc520")
+
+#load the libraries
+library(dplyr)
+
+#load the data
+veteran_suicide_sex.df <- read.csv("data/project_data/veteran_suicide_by_sex.csv")
+suicide_age.df <- read.csv("data/project_data/suicide_by_age.csv")
+veteran_suicide.df <- read.csv("data/project_data/veteran_suicide_overall.csv")
+non_veteran_suicide.df <- read.csv("data/project_data/non-veteran_suicide_overall.csv")
+recent_VHA_user.df <- read.csv("data/project_data/recent_VHA_user.csv")
+non_recent_VHA_user.df <- read.csv("data/project_data/non-recent_VHA_user.csv")
+
+
+#only taking the total per year of veteran suicides split by sex
+total_veteran_suicide_sex <- veteran_suicide_sex.df %>% filter(State_of_Death == "Total U.S.")
+#checking for spelling issues
+unique(total_veteran_suicide_sex$Year)
+unique(total_veteran_suicide_sex$Geographic.Region)
+unique(total_veteran_suicide_sex$State_of_Death)
+unique(total_veteran_suicide_sex$Sex)
+
+#only taking the total per year of veteran suicides split by age
+total_veteran_suicide_age <- suicide_age.df %>% filter(State_of_Death == "Total U.S.")
+#checking for spelling issues
+unique(total_veteran_suicide_age$Year)
+unique(total_veteran_suicide_age$Geographic.Region..Based.on.State.of.Death)
+unique(total_veteran_suicide_age$State_of_Death)
+unique(total_veteran_suicide_age$Age.Group)
+```
+
+For the data sets, in the final project step 1, I had a total of 15 data sets. Since then, I have slimmed down the data to a total of 6 data sets. I am able to slim down the data because I have refined my research question to what is the most vulnerable time for a veteran to think about committing suicide. 
+
+Originally, I had two excel files that contained multiple tables on multiple different sheets. I decided to take the 6 important data sets and separate them by file. I chose to use a .csv file for each one because that is the easiest to work with for me. Now I have 6 distinct data sets to be able to work with.
+
+The veteran suicide by sex and by age both included breakdowns by states in their respective data sets. I decided to only focus on the yearly data because the rest of my data sets were about each year.
+
+Otherwise, the data was already very clean. There weren't missing data, incorrect spelling, or anything like that.
+
+# What does the final data set look like?
+
+```{r}
+#number of rows
+nrow(total_veteran_suicide_sex)
+nrow(total_veteran_suicide_age)
+nrow(veteran_suicide.df)
+nrow(non_veteran_suicide.df)
+nrow(recent_VHA_user.df)
+nrow(non_recent_VHA_user.df)
+
+#number of columns
+ncol(total_veteran_suicide_sex)
+ncol(total_veteran_suicide_age)
+ncol(veteran_suicide.df)
+ncol(non_veteran_suicide.df)
+ncol(recent_VHA_user.df)
+ncol(non_recent_VHA_user.df)
+
+#Column names for each data set
+colnames(total_veteran_suicide_sex)
+colnames(total_veteran_suicide_age)
+colnames(veteran_suicide.df)
+colnames(non_veteran_suicide.df)
+colnames(recent_VHA_user.df)
+colnames(non_recent_VHA_user.df)
+
+#head function
+head(total_veteran_suicide_sex)
+head(total_veteran_suicide_age)
+head(veteran_suicide.df)
+head(non_veteran_suicide.df)
+head(recent_VHA_user.df)
+head(non_recent_VHA_user.df)
+```
+
+Here is a quick breakdown of the 6 different data sets. This helps me visualize how I can move forward with combining the different data sets to find new information.
+
+# Questions for future steps
+
+Since the data sets are very clean to begin with, I don't think I need to know anything else about importing or cleaning data. The hard work of the individuals who put together the initial data sets made it very simple to quickly clean up what I needed to clean up.
+
+# What information is not self-evident?
+
+Right now, all the information is pretty self-evident. Most of the data sets have some overlap in regard to the different variables they have like sex or age. 
+
+# What are different ways you could look at this data?
+
+To answer the questions for this final project, I think I'm going to focus on age, sex, and whether a veteran received help from the VHA. I believe that these three topics are important to finding out when a veteran is most vulnerable to suicide. I want to look at the different trends in those three topics to help find an answer as well as look at all three together.
+
+# How do you plan to slice and dice the data?
+
+Yes I plan on slicing and dicing the data. Additionally, I think there might be some benefit of combining different parts of the data sets together. 
+
+I plan to slice the data sets in several different ways to see if there are any trends. I plan to slice by year (2005-2018), by age, by sex, and by whether or not they received help from the VHA. In order to do that, I will also have to take the different parts of the data sets and join them together.
+
+# How could you summarize your data to answer key questions?
+
+I can use the different summary statistics that R has to offer. For instance, I can find the mean of the rate of suicide by year, age, sex, and whether or not a veteran received help from the VHA.  
+
+Additionally, other functions include min, max, median, range, etc. All of these are very helpful to use to get a quick peek at the trends in the data.
+
+# What types of plots and tables will help you illustrate the findings to your questions?
+
+In the beginning to help explore the data more, box plots, histograms, and Q-Q plots are important. They can be used to visually look at the distribution of the data and if there are any outliers. 
+
+Additionally, frequency tables could be helpful to give a quick view of the data based on the four variables I plan to focus on. 
+
+# Do you plan to incorporate machine learning techiques?
+
+At this point, I don't know any machine learning techniques since that is going to be learned during week 10. If I find any benefit to utilizing machine learning techniques, I will use them in the project. Otherwise, I won't include those techniques.
+
+# Questions for future steps
+
+Is there any type of machine learning technique that might help out my project? 
