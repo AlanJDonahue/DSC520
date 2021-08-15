@@ -1,0 +1,43 @@
+---
+title: "Final Project Part 3"
+author: "Alan Donahue"
+date: "8/14/2021"
+output: pdf_document
+---
+
+# Introduction
+
+In this final project, my focus was on suicide rates specifically in the military veteran community. Suicide amongst veterans has become a hot topic since 2016 when the rate started to go on the rise. Organizations like Mission 22 have been created to try to combat this issue that is plaguing the veteran community.
+
+# The problem statement I addressed
+
+Specifically, the problem statement I addressed is broken down into two different parts. The first part covers whether there are similar trends between the non-veteran population and the veteran population in terms of suicide rates.
+
+The second part that I addressed is finding predictors for when a veteran is most vulnerable to the idea of suicide.
+
+# How I addressed the problem statement
+
+In order to address if the suicide rate was similar between the non-veteran population and the veteran population, I calculated the rates between the two and then compared.
+
+In order to address when a veteran is more likely to be vulnerable to suicide, I looked at four different predictors: age, sex, whether they sought help from the VHA or not.
+
+# Analysis
+
+The analysis I've completed prior to developing a model has shown that the veteran population has a higher suicide rate compared to the general population suicide rate. 
+
+Moving forward, I would conduct a multiple regression model using the four predictors: age, sex, VHA help, non-VHA help. Without actually doing the model, I would assume that age and sex are important predictors. 
+
+Additionally, at a quick glance, it looks like veterans who seek VHA help are more likely to commit suicide than veterans who don't seek VHA help.
+
+# Implications
+
+Once the model is built, the VHA can find out when a veteran is more likely to commit suicide. They can then focus their resources on those veterans that fall into that category to try to save more people.
+
+The fact that veterans have a higher suicide rate than the non-veteran population shows that there is a unique problem to the veteran population compared to the non-veteran population. Either there is an unique problem or a problem that is shared between the two categories is exasperated. 
+
+The fact that at a quick glance it looks like veterans who have sought help through the VHA are more likely to commit suicide than those that didn't is a scary perspective. It could mean that the VHA is doing something completely wrong. Before jumping to conclusions though, that needs to be looked into more.
+
+# Limitations
+
+The biggest limitation so far has been the very general data about the suicides. I feel like the topic of suicide is a complicated topic and the choice of committing suicide isn't just influenced by sex, age, and if they sought help. There needs to be more data captured to be able to give a more thorough answer like if a veteran had a job, or an immediate family.
+
